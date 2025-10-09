@@ -163,5 +163,9 @@ namespace NetSdrClientApp
             }
             Console.WriteLine("Response recieved: " + e.Select(b => Convert.ToString(b, toBase: 16)).Aggregate((l, r) => $"{l} {r}"));
         }
+        private void HandleUnsolicitedMessage(byte[] data)
+        {
+            Console.WriteLine("Unsolicited message received!");
+        }
     }
 }
