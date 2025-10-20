@@ -59,20 +59,6 @@ public class UdpClientWrapper : IUdpClient
         }
     }
 
-    public void Exit()
-    {
-        try
-        {
-            _cts?.Cancel();
-            _udpClient?.Close();
-            Console.WriteLine("Stopped listening for UDP messages.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error while stopping: {ex.Message}");
-        }
-    }
-
     public override int GetHashCode()
     {
         var payload = $"{nameof(UdpClientWrapper)}|{_localEndPoint.Address}|{_localEndPoint.Port}";
