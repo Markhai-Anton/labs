@@ -47,6 +47,7 @@ namespace NetSdrClientApp.Messages
         {
             return GetMessage(type, ControlItemCodes.None, parameters);
         }
+        
 
         private static byte[] GetMessage(MsgTypes type, ControlItemCodes itemCode, byte[] parameters)
         {
