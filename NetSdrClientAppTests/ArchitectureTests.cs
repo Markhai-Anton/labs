@@ -101,6 +101,7 @@ namespace NetSdrClientAppTests
                 .Should()
                 .OnlyHaveDependenciesOn(
                     "System",
+                    "System.Text",
                     "System.Collections",
                     "System.Collections.Generic",
                     "System.Linq",
