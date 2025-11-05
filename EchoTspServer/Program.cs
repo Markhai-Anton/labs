@@ -178,10 +178,15 @@ namespace EchoServer
                 _udpClient.Send(msg, msg.Length, endpoint);
                 Console.WriteLine($"Message sent to {_host}:{_port} ");
             }
+            catch (ObjectDisposedException)
+            {
+                // Консоль або потік уже закриті — ігноруємо
+            }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error sending message: {ex.Message}");
             }
+            
         }
 
         public void StopSending()

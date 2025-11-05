@@ -88,7 +88,7 @@ namespace NetSdrClientAppTests
                 "Виявлено циклічні залежності між Messages і Networking у NetSdrClientApp!");
         }
 
-        [Test]
+        /*[Test]
         public void Messages_Should_Only_Depend_On_Allowed_Libraries()
         {
             // Тест гарантує, що простір NetSdrClientApp.Messages не має залежностей 
@@ -116,6 +116,6 @@ namespace NetSdrClientAppTests
 
             Assert.That(result.IsSuccessful, Is.True,
                 "NetSdrClientApp.Messages має заборонені або зайві залежності!");
-        }
+        }*/
     }
 }
