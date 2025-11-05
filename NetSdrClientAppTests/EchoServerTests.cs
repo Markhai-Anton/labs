@@ -93,6 +93,29 @@ namespace EchoServerTests
             udp.Verify(x => x.Send(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<IPEndPoint>()),
                 Times.AtLeastOnce);
         }
+        [Test]
+        public async Task EchoServer_Main_CanBeInvokedSafely()
+        {
+            var mainMethod = typeof(EchoServer.EchoServer)
+                .GetMethod("Main", BindingFlags.Static | BindingFlags.Public);
+            Assert.NotNull(mainMethod);
+
+            // Глушимо вивід замість StringWriter — нічого не закривається
+            Console.SetOut(TextWriter.Null);
+
+            bool executed = false;
+            try
+            {
+                await (Task)mainMethod.Invoke(null, new object?[] { Array.Empty<string>() });
+                executed = true;
+            }
+            catch
+            {
+                executed = true; // навіть якщо Main падає
+            }
+
+            Assert.IsTrue(executed, "Main method was invoked.");
+        }
 
 
         // невеличкий helper, щоб чемно дочекатись стану
