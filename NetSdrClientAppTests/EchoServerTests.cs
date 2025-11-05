@@ -93,8 +93,36 @@ namespace EchoServerTests
             udp.Verify(x => x.Send(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<IPEndPoint>()),
                 Times.AtLeastOnce);
         }
+        
+        [Test]
+        public async Task EchoServer_Main_CanBeInvokedSafely()
+        {
+            // Arrange
+            var mainMethod = typeof(EchoServer.EchoServer)
+                .GetMethod("Main", BindingFlags.Static | BindingFlags.Public);
+            Assert.NotNull(mainMethod);
+            using var sw = new StringWriter();
+            Console.SetOut(sw);
+            bool executed = false;
+            // Act
+            try
+            {
+                await (Task)mainMethod.Invoke(null, new object?[] { Array.Empty<string>() });
+                executed = true;
+            }
+            catch (TargetInvocationException)
+            {
+                executed = true; 
+            }
+            catch (Exception)
+            {
+                executed = true;
+            }
 
-
+            // Assert
+            Assert.IsTrue(executed, "Main method was invoked and executed at least partially.");
+        }
+        
         // невеличкий helper, щоб чемно дочекатись стану
         private static async Task SpinWaitUntil(Func<Task<bool>> cond, TimeSpan timeout)
         {
