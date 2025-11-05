@@ -66,7 +66,8 @@ namespace EchoServerTests
             sender.StartSending(10);
             Thread.Sleep(60);     // даємо таймеру “вистрілити” кілька разів
             sender.StopSending();
-
+            Thread.Sleep(20); // дам таймеру завершити поточний цикл
+            
             udp.Verify(x => x.Send(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<IPEndPoint>()),
                        Times.AtLeastOnce);
         }
