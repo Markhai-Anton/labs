@@ -59,6 +59,8 @@ namespace NetSdrClientApp.Networking
                 _cts?.Cancel();
                 _stream?.Close();
                 _tcpClient?.Close();
+                
+                _cts?.Dispose();
 
                 _cts = null;
                 _tcpClient = null;

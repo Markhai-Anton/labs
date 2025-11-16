@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace NetSdrClientApp.Networking;
+
 public class UdpClientWrapper : IUdpClient
 {
     private readonly IPEndPoint _localEndPoint;
@@ -21,6 +23,9 @@ public class UdpClientWrapper : IUdpClient
 
     public async Task StartListeningAsync()
     {
+        _cts?.Cancel();
+        _cts?.Dispose();
+        
         _cts = new CancellationTokenSource();
         Console.WriteLine("Start listening for UDP messages...");
 
@@ -35,9 +40,9 @@ public class UdpClientWrapper : IUdpClient
                 Console.WriteLine($"Received from {result.RemoteEndPoint}");
             }
         }
-        catch (OperationCanceledException ex)
+        catch (OperationCanceledException)
         {
-            //empty
+            // expected on cancellation
         }
         catch (Exception ex)
         {
@@ -51,6 +56,12 @@ public class UdpClientWrapper : IUdpClient
         {
             _cts?.Cancel();
             _udpClient?.Close();
+
+            
+            _cts?.Dispose();
+            _cts = null;
+            _udpClient = null;
+
             Console.WriteLine("Stopped listening for UDP messages.");
         }
         catch (Exception ex)
@@ -67,5 +78,16 @@ public class UdpClientWrapper : IUdpClient
         var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(payload));
 
         return BitConverter.ToInt32(hash, 0);
+    }
+    
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj is null || obj.GetType() != GetType())
+            return false;
+
+        var other = (UdpClientWrapper)obj;
+        return Equals(_localEndPoint, other._localEndPoint);
     }
 }
