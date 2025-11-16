@@ -83,8 +83,10 @@ namespace NetSdrClientApp.Messages
                 var value = BitConverter.ToUInt16(msgEnumarable.Take(_msgControlItemLength).ToArray());
                 msgEnumarable = msgEnumarable.Skip(_msgControlItemLength);
                 msgLength -= _msgControlItemLength;
+                
+                int codeAsInt = value;
 
-                if (Enum.IsDefined(typeof(ControlItemCodes), value))
+                if (Enum.IsDefined(typeof(ControlItemCodes), codeAsInt))
                 {
                     itemCode = (ControlItemCodes)value;
                 }
