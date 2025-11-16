@@ -23,7 +23,7 @@ namespace EchoServerTests
 
             // assert: цикл завершився
             await Task.WhenAny(runTask, Task.Delay(1000));
-            Assert.IsTrue(runTask.IsCompleted);
+            Assert.That(runTask.IsCompleted, Is.True);
         }
 
         [Test]
@@ -84,10 +84,10 @@ namespace EchoServerTests
 
             // дістати приватний метод
             var mi = typeof(UdpTimedSender).GetMethod("SendMessageCallback", BindingFlags.Instance | BindingFlags.NonPublic);
-            Assert.NotNull(mi);
+            Assert.That(mi, Is.Not.Null);
 
             // виклик через reflection
-            mi.Invoke(sender, new object?[] { null });
+            mi!.Invoke(sender, new object?[] { null });
 
             // перевірка, що Send дійсно викликався
             udp.Verify(x => x.Send(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<IPEndPoint>()),
@@ -98,7 +98,7 @@ namespace EchoServerTests
         {
             var mainMethod = typeof(EchoServer.EchoServer)
                 .GetMethod("Main", BindingFlags.Static | BindingFlags.Public);
-            Assert.NotNull(mainMethod);
+            Assert.That(mainMethod, Is.Not.Null);
 
             // Глушимо вивід замість StringWriter — нічого не закривається
             Console.SetOut(TextWriter.Null);
@@ -106,7 +106,7 @@ namespace EchoServerTests
             bool executed = false;
             try
             {
-                await (Task)mainMethod.Invoke(null, new object?[] { Array.Empty<string>() });
+                await (Task)mainMethod!.Invoke(null, new object?[] { Array.Empty<string>() });
                 executed = true;
             }
             catch
@@ -114,7 +114,7 @@ namespace EchoServerTests
                 executed = true; // навіть якщо Main падає
             }
 
-            Assert.IsTrue(executed, "Main method was invoked.");
+            Assert.That(executed, Is.True, "Main method was invoked.");
         }
 
 
