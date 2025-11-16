@@ -23,9 +23,14 @@ public class UdpClientWrapper : IUdpClient
 
     public async Task StartListeningAsync()
     {
-        _cts?.Cancel();
-        _cts?.Dispose();
-        
+        // якщо вже є попередній CTS – акуратно його завершуємо
+        if (_cts is not null)
+        {
+            await _cts.CancelAsync();   // рекомендація Sonar: асинхронне скасування
+            _cts.Dispose();
+            _cts = null;
+        }
+
         _cts = new CancellationTokenSource();
         Console.WriteLine("Start listening for UDP messages...");
 
@@ -57,7 +62,6 @@ public class UdpClientWrapper : IUdpClient
             _cts?.Cancel();
             _udpClient?.Close();
 
-            
             _cts?.Dispose();
             _cts = null;
             _udpClient = null;
@@ -79,7 +83,7 @@ public class UdpClientWrapper : IUdpClient
 
         return BitConverter.ToInt32(hash, 0);
     }
-    
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
